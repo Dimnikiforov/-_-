@@ -19,14 +19,12 @@ class VK:
             'album_id': 'profile',
             'extended': True,
             'count': 1
-
         }
         photos = requests.get(url, params={**self.params, **params}).json()
         photos_links_dict = []
         for photo in photos['response']['items']:
-             for link in photo['sizes']:
-                 if link['type'] == 'y':
-                  photos_links_dict.append(link['url'])
+             for link in photo['sizes'][-1:]:
+                photos_links_dict.append(link['url'])
         photos_links = ', '.join(photos_links_dict)
         return photos_links
 
@@ -39,10 +37,8 @@ class VK:
             'album_id': 'profile',
             'extended': True,
             'count': 1
-
         }
         photos = requests.get(url, params={**self.params, **params}).json()
-        # likes = ','.join([str(i['likes']['count']) for i in photos['response']['items']])
         file_name_dict = []
         for photo in photos['response']['items']:
             if str(photo['likes']['count']) + '.jpg' in file_name_dict:
@@ -75,8 +71,7 @@ class VK:
             else:
                 file_name['name'] = str(photo['likes']['count']) + '.jpg'
                 res.append(file_name)
-            for link in photo['sizes']:
-                if link['type'] == 'y':
-                    photos_size['size'] = link['type']
-                    res.append(photos_size)
+            for link in photo['sizes'][-1:]:
+                photos_size['size'] = link['type']
+                res.append(photos_size)
         return res
