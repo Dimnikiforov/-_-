@@ -18,15 +18,14 @@ class VK:
             'owner_id': owner_id,
             'album_id': 'profile',
             'extended': True,
-            'count': 1
+            'count': 10
         }
         photos = requests.get(url, params={**self.params, **params}).json()
         photos_links_dict = []
         for photo in photos['response']['items']:
              for link in photo['sizes'][-1:]:
                 photos_links_dict.append(link['url'])
-        photos_links = ', '.join(photos_links_dict)
-        return photos_links
+        return photos_links_dict
 
 
     def get_name(self, owner_id):
@@ -36,7 +35,7 @@ class VK:
             'owner_id': owner_id,
             'album_id': 'profile',
             'extended': True,
-            'count': 1
+            'count': 10
         }
         photos = requests.get(url, params={**self.params, **params}).json()
         file_name_dict = []
@@ -45,8 +44,7 @@ class VK:
                 file_name_dict.append(str(photo['likes']['count']) + '_' + str(photo['date']) + '.jpg')
             else:
                 file_name_dict.append(str(photo['likes']['count']) + '.jpg')
-        file_name = ','.join(file_name_dict)
-        return file_name
+        return file_name_dict
 
 
     def get_resault(self, owner_id):
@@ -62,16 +60,13 @@ class VK:
         photos = requests.get(url, params={**self.params, **params}).json()
         res = []
         file_name = {}
-
+        photos_dict = self.get_name(owner_id)
         photos_size = {}
+        for ph in photos_dict:
+            file_name['name'] = ph
         for photo in photos['response']['items']:
-            if str(photo['likes']['count']) + '.jpg' in file_name:
-                file_name['name'] = str(photo['likes']['count']) + '_' + str(photo['date']) + '.jpg'
-                res.append(file_name)
-            else:
-                file_name['name'] = str(photo['likes']['count']) + '.jpg'
-                res.append(file_name)
             for link in photo['sizes'][-1:]:
                 photos_size['size'] = link['type']
-                res.append(photos_size)
+            res.append(file_name)
+            res.append(photos_size)
         return res
