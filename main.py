@@ -7,6 +7,7 @@ with open('ya_token.txt', 'r') as f:
 if __name__ == '__main__':
     vk_client = VK(vk_token, '5.131')
     ya_disk = YaUploader(ya_token)
-    print(ya_disk.get_upload())
+    # print(ya_disk.get_upload())
+    print(vk_client.get_resault(1))
 
 

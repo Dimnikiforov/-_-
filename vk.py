@@ -56,7 +56,7 @@ class VK:
             'owner_id': owner_id,
             'album_id': 'profile',
             'extended': True,
-            'count': 1
+            'count': 10
 
         }
         photos = requests.get(url, params={**self.params, **params}).json()

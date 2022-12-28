@@ -24,9 +24,13 @@ class YaUploader:
 
     def get_upload(self, vk_client=VK(vk_token, '5.131')):
         owner_id = str(input('input vk id:'))
+        folder_name = self.create_folder()
+        ph_names = vk_client.get_name(owner_id)
+        ph_links = vk_client.get_photos(owner_id)
         url = 'v1/disk/resources/upload/'
-        param = {'path': f'/{self.create_folder()}/{vk_client.get_name(owner_id=owner_id)}',
-                 'url': vk_client.get_photos(owner_id=owner_id)}
-        res = requests.post(self.ya_url + url, headers=self.get_headers(), params=param)
-        return res.status_code
+        for name, link in zip(ph_names, ph_links):
+            param_name = {'path': f'/{folder_name}/{name}'}
+            param_link = {'url': link}
+            res = requests.post(self.ya_url + url, headers=self.get_headers(), params={**param_link, **param_name})
+        return vk_client.get_resault(owner_id)
 
