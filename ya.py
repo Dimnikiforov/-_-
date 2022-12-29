@@ -28,9 +28,14 @@ class YaUploader:
         ph_names = vk_client.get_name(owner_id)
         ph_links = vk_client.get_photos(owner_id)
         url = 'v1/disk/resources/upload/'
-        for name, link in zip(ph_names, ph_links):
-            param_name = {'path': f'/{folder_name}/{name}'}
-            param_link = {'url': link}
-            res = requests.post(self.ya_url + url, headers=self.get_headers(), params={**param_link, **param_name})
-        return vk_client.get_resault(owner_id)
+        from tqdm import tqdm
+        from contextlib import closing
+        with closing(tqdm(total=len(ph_names))) as pbar:
+            for name, link in zip(ph_names, ph_links):
+                param_name = {'path': f'/{folder_name}/{name}'}
+                param_link = {'url': link}
+                res = requests.post(self.ya_url + url, headers=self.get_headers(), params={**param_link, **param_name})
+                pbar.update(1)
+                pbar.set_description(f"Создана папка {folder_name}, происходит загрузка файлов")
+        return res.json()
 
