@@ -58,15 +58,9 @@ class VK:
 
         }
         photos = requests.get(url, params={**self.params, **params}).json()
-        res = []
-        file_name = {}
         photos_dict = self.get_name(owner_id)
-        photos_size = {}
-        for ph in photos_dict:
-            file_name['name'] = ph
+        photos_size = []
         for photo in photos['response']['items']:
             for link in photo['sizes'][-1:]:
-                photos_size['size'] = link['type']
-            res.append(file_name)
-            res.append(photos_size)
-        return res
+                photos_size.append(link['type'])
+        return list(zip(photos_dict, photos_size))

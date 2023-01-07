@@ -36,6 +36,6 @@ class YaUploader:
                 param_link = {'url': link}
                 res = requests.post(self.ya_url + url, headers=self.get_headers(), params={**param_link, **param_name})
                 pbar.update(1)
-                pbar.set_description(f"Создана папка {folder_name}, происходит загрузка файлов")
-        return res.json()
+                pbar.set_description(f"{folder_name} has got created. Loading")
+        return vk_client.get_resault(owner_id=owner_id)
 
